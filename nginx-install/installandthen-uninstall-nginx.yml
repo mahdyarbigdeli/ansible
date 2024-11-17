@@ -1,0 +1,12 @@
+- name: Installing Nginx
+  hosts: lab
+  tasks:
+    - name: Install nginx
+      apt:
+        name:
+        - nginx
+        purge: true
+        autoremove: true
+        state: absent
+
+#purge miad config file haro delete mikone va autoremove miad dependenci haro delete mikone

@@ -1,0 +1,53 @@
+- name: Install and check installation
+  hosts: localhost
+  connection: local
+  become: no
+  tasks:
+    - name: Install nginx
+      apt:
+        name: nginx
+        update_cache: true
+        state: latest
+
+    - name: Ensure nginx is enabled and running
+      service:
+        name: nginx
+        enabled: true
+        state: started
+
+    - name: Test html page is installed
+      copy:
+        content: "Welcome to the PACKOPS Website!\n"
+        dest: /var/www/html/index.html
+
+    - name: Connect to intranet webserver
+      uri:
+        url: http://127.0.0.1/
+        return_content: no
+        status_code: 200
+      register: result
+      ignore_errors: yes
+
+    - debug:
+        msg: "{{ result }}"
+
+    - name: Notify on Telegram if response code is not 200
+      uri:
+        url: https://api.telegram.org/bot6660737074:AAEjz0Zek096QLvnDdUSRKgPbbqS3ZQoe4Y/sendMessage
+        method: POST
+        body_format: form-urlencoded
+        body:
+          chat_id: 116733338  #amin id in telegram
+          text: "The  Website is not OK - Response Code: {{ result.status }} and the reason is : {{ result.msg }}"
+      when: result.status != 200
+
+
+    - name: Notify on Telegram if response code is 200
+      uri:
+        url: https://api.telegram.org/bot6660737074:AAEjz0Zek096QLvnDdUSRKgPbbqS3ZQoe4Y/sendMessage
+        method: POST
+        body_format: form-urlencoded
+        body:
+          chat_id: -1002200754264  #amin id in telegram
+          text: "server bega raft" #"The Website is  OK - Response Code: {{ result.status }}"
+      when: result.status == 200

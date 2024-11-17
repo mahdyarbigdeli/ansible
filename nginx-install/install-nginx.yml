@@ -1,0 +1,10 @@
+- name: Installing Nginx
+  hosts: lab
+  tasks:
+    - name: Install nginx
+      apt:
+        name:
+        - nginx
+        update_cache: true
+        state: latest
+

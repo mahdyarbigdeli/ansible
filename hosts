@@ -1,0 +1,2 @@
+[linux-servers]
+lab ansible_ssh_host=172.17.14.211

@@ -1,0 +1,2 @@
+[linux-servers]
+middledailycore ansible_host=IP ansible_user=root ansible_ssh_pass=?

@@ -1,0 +1,31 @@
+---
+- name: Check storage on servers and send result to Telegram if usage > 80%
+  hosts: all
+  gather_facts: no
+  vars_files:
+    - vault.yml
+  tasks:
+    - name: Disable host key checking
+      set_fact:
+        ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+
+    - name: Check disk usage
+      command: df -h
+      register: disk_usage
+
+    - name: Parse disk usage and check for >80%
+      set_fact:
+        high_usage_filesystems: "{{ disk_usage.stdout_lines | select('search', '([8-9][0-9]%|100%)') | list }}"
+
+    - name: Send disk usage result to Telegram if usage > 80%
+      local_action:
+        module: uri
+        url: "https://api.telegram.org/bot{{ telegram_bot_token }}/sendMessage"
+        method: POST
+        body: >
+          {
+            "chat_id": "{{ telegram_chat_id }}",
+            "text": "{{ inventory_hostname }} has high disk usage:\n{{ high_usage_filesystems | join('\n') }}"
+          }
+        body_format: json
+      when: high_usage_filesystems | length > 0

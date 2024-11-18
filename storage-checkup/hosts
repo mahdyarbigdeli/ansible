@@ -1,0 +1,19 @@
+[servers]
+lb ansible_host=ip
+monitoring ansible_host=ip
+backend1 ansible_host=ip
+backend2 ansible_host=ip
+backend3 ansible_host=ip
+backend4 ansible_host=ip
+log ansible_host=ip
+front1 ansible_host=ip
+front2 ansible_host=ip
+aldypay_front ansible_host=ip
+DB ansible_host=ip
+NFS ansible_host=ip
+Runner ansible_host=ip
+registry ansible_host=ip
+redis ansible_host=ip
+gitlab ansible_host=ip
+dbbackups ansible_host=ip
+dev ansible_host=ip

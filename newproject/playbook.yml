@@ -1,0 +1,8 @@
+---
+- name: Configure Ubuntu VMs
+  hosts: all
+  become: yes
+  roles:
+    - common
+    - nginx
+    - docker
